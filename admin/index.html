@@ -44,7 +44,7 @@
   var errorEl = document.getElementById('loginError');
 
   if (sessionStorage.getItem('omee_admin') === 'true') {
-    window.location.href = 'dashboard.html';
+    window.location.href = '../admin/dashboard.html';
     return;
   }
 
@@ -55,7 +55,7 @@
 
     if (user === ADMIN_USER && pass === ADMIN_PASS) {
       sessionStorage.setItem('omee_admin', 'true');
-      window.location.href = 'dashboard.html';
+      window.location.href = '../admin/dashboard.html';
     } else {
       errorEl.textContent = 'Usuario o contraseña incorrectos';
       document.getElementById('password').value = '';
