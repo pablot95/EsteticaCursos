@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscripción | Universidad de Estética OMEE Reina Catalina</title>
+<meta name="description" content="Completá tu inscripción al curso de estética profesional. Pago seguro a través de Mercado Pago.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="preloader" id="preloader"><div class="preloader-ring"></div></div>
+
+<header class="site-header inner-header" id="siteHeader">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="images/logo.jpeg" alt="Logo OMEE Reina Catalina" width="48" height="48">
+        <div class="logo-text">
+          OMEE Reina Catalina
+          <span>Universidad de Estética</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html#home">Inicio</a>
+        <a href="index.html#courses">Cursos</a>
+        <a href="index.html#about">Nosotros</a>
+        <a href="index.html#syllabus">Temarios</a>
+        <a href="index.html#courses" class="nav-cta">Inscribite</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="checkout-page">
+  <div class="container">
+    <a href="" class="back-link" id="checkoutBack">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver al Curso
+    </a>
+    <div class="checkout-grid">
+      <div class="checkout-form-card reveal">
+        <h2>Datos de Inscripción</h2>
+        <p>Completá tus datos para inscribirte al curso.</p>
+        <form id="checkoutForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">Nombre</label>
+              <input type="text" id="firstName" name="firstName" required autocomplete="given-name" placeholder="Tu nombre">
+              <span class="error-msg"></span>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Apellido</label>
+              <input type="text" id="lastName" name="lastName" required autocomplete="family-name" placeholder="Tu apellido">
+              <span class="error-msg"></span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="tu@email.com">
+              <span class="error-msg"></span>
+            </div>
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="+54 11 1234-5678">
+              <span class="error-msg"></span>
+            </div>
+          </div>
+          <div class="payment-section" id="paymentSection">
+            <h3>Método de Pago</h3>
+            <div class="payment-icons">
+              <img src="images/mercadopago.png" alt="MercadoPago" height="34px">
+              <img src="images/visa.png" alt="Visa" height="28">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" height="28">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="Amex" height="28">
+            </div>
+            <button type="submit" class="mp-button" id="checkoutBtn">
+              Pagar con Mercado Pago
+            </button>
+            <p class="payment-note">Te llevaremos a Mercado Pago para terminar la operación de forma segura.</p>
+          </div>
+        </form>
+      </div>
+      <div class="checkout-summary reveal stagger-2">
+        <div class="summary-card">
+          <div class="summary-card-header"><h3>Resumen de Inscripción</h3></div>
+          <div class="summary-card-body" id="summaryBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <img src="images/logo.jpeg" alt="OMEE Reina Catalina" width="48" height="48">
+          <div class="logo-text">
+            OMEE Reina Catalina
+            <span>Universidad de Estética</span>
+          </div>
+        </a>
+        <p>Formando el futuro de las profesionales de la belleza con capacitación de primer nivel y programas de certificación reconocidos internacionalmente.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Cursos</h4>
+        <nav>
+          <a href="course.html?id=korean-lifting">Lifting Coreano</a>
+          <a href="course.html?id=hyaluron-pen">Hyaluron Pen</a>
+          <a href="course.html?id=eyelash-extensions">Extensiones de Pestañas</a>
+          <a href="course.html?id=brows-lashes">Cejas y Pestañas</a>
+        </nav>
+      </div>
+      <div class="footer-col">
+        <h4>Más</h4>
+        <nav>
+          <a href="course.html?id=express-nails">Uñas Express</a>
+          <a href="course.html?id=master-educator">Máster Educador</a>
+          <a href="index.html#about">Sobre Nosotros</a>
+        </nav>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>info@omeereinacatalina.com</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Buenos Aires, Argentina</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copyright">&copy; 2026 OMEE Reina Catalina. Todos los derechos reservados.</span>
+      <span class="footer-credit">Developed and designed by: <a href="https://gokywebs.net" target="_blank" rel="noopener">Gokywebs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/courses-data.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

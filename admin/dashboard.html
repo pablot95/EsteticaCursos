@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin | OMEE Reina Catalina</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="../images/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-header-inner">
+    <div class="admin-brand">
+      <img src="../images/logo.jpeg" alt="OMEE" width="36" height="36">
+      <span>Admin OMEE</span>
+    </div>
+    <div class="admin-header-actions">
+      <a href="../index.html" class="admin-link">Ver Sitio</a>
+      <button class="admin-logout" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+  </div>
+</header>
+
+<main class="admin-main">
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="courses">Cursos y Precios</button>
+    <button class="admin-tab" data-tab="orders">Compras / Inscripciones</button>
+  </div>
+
+  <section class="admin-panel" id="panelCourses">
+    <div class="admin-panel-header">
+      <h2>Gestión de Cursos</h2>
+      <p>Modificá los precios y cupos disponibles de cada curso. Los cambios se guardan en Firebase y se reflejan en el sitio en tiempo real.</p>
+    </div>
+    <div class="admin-courses-grid" id="adminCoursesGrid"></div>
+  </section>
+
+  <section class="admin-panel hidden" id="panelOrders">
+    <div class="admin-panel-header">
+      <h2>Inscripciones Recibidas</h2>
+      <p>Todas las inscripciones registradas a través del sitio web.</p>
+    </div>
+    <div class="admin-orders-filters">
+      <select id="orderFilter">
+        <option value="all">Todos los cursos</option>
+      </select>
+      <select id="statusFilter">
+        <option value="all">Todos los estados</option>
+        <option value="pending">Pendientes</option>
+        <option value="paid">Pagados</option>
+        <option value="cancelled">Cancelados</option>
+      </select>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="ordersTable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Curso</th>
+            <th>Plan</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+    <div class="admin-empty hidden" id="ordersEmpty">No hay inscripciones registradas aún.</div>
+  </section>
+</main>
+
+<div class="admin-modal hidden" id="editModal">
+  <div class="admin-modal-overlay" id="editModalOverlay"></div>
+  <div class="admin-modal-content admin-modal-wide">
+    <div class="admin-modal-header">
+      <h3 id="editModalTitle">Editar Curso</h3>
+      <button class="admin-modal-close" id="editModalClose">&times;</button>
+    </div>
+    <form id="editForm">
+      <input type="hidden" id="editCourseId">
+
+      <div class="admin-form-row">
+        <div class="admin-form-group admin-form-half">
+          <label>Imagen del Curso</label>
+          <div class="admin-img-upload" id="courseImgUpload">
+            <img id="editCourseImgPreview" src="" alt="">
+            <input type="file" id="editCourseImg" accept="image/*">
+            <span class="admin-img-label">Click para cambiar imagen</span>
+          </div>
+        </div>
+        <div class="admin-form-group admin-form-half">
+          <label>Imagen del Temario</label>
+          <div class="admin-img-upload" id="temarioImgUpload">
+            <img id="editTemarioImgPreview" src="" alt="">
+            <input type="file" id="editTemarioImg" accept="image/*">
+            <span class="admin-img-label">Click para cambiar imagen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="editName">Nombre del Curso</label>
+        <input type="text" id="editName" required>
+      </div>
+      <div class="admin-form-group">
+        <label for="editTagline">Tagline</label>
+        <input type="text" id="editTagline">
+      </div>
+      <div class="admin-form-row">
+        <div class="admin-form-group admin-form-half">
+          <label for="editDuration">Duración</label>
+          <input type="text" id="editDuration">
+        </div>
+        <div class="admin-form-group admin-form-half">
+          <label for="editCertificate">Certificación</label>
+          <input type="text" id="editCertificate">
+        </div>
+      </div>
+      <div class="admin-form-group">
+        <label for="editShortDesc">Descripción Corta</label>
+        <textarea id="editShortDesc" rows="3"></textarea>
+      </div>
+
+      <div class="admin-form-row">
+        <div class="admin-form-group admin-form-third">
+          <label for="editPriceGroup">Precio Grupal ($)</label>
+          <input type="number" id="editPriceGroup" min="0" step="1000" required>
+        </div>
+        <div class="admin-form-group admin-form-third">
+          <label for="editPricePersonal">Precio Personalizado ($)</label>
+          <input type="number" id="editPricePersonal" min="0" step="1000" required>
+        </div>
+        <div class="admin-form-group admin-form-third">
+          <label for="editSpots">Cupos</label>
+          <input type="number" id="editSpots" min="0" step="1">
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="editIncludes">Incluye (uno por línea)</label>
+        <textarea id="editIncludes" rows="4"></textarea>
+      </div>
+
+      <div class="admin-form-group">
+        <label>Temario / Módulos</label>
+        <div id="syllabusEditor"></div>
+        <button type="button" class="admin-add-block-btn" id="addSyllabusBlock">+ Agregar Módulo</button>
+      </div>
+
+      <div class="admin-form-actions">
+        <button type="button" class="admin-btn-cancel" id="editCancel">Cancelar</button>
+        <button type="submit" class="admin-btn-save" id="editSave">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="admin-toast hidden" id="adminToast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+<script src="../js/courses-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

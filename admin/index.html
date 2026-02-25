@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | OMEE Reina Catalina</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="../images/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-page">
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="../images/logo.jpeg" alt="OMEE Reina Catalina" width="64" height="64">
+      <h1>Panel de Administración</h1>
+      <p>OMEE Reina Catalina</p>
+    </div>
+    <form id="loginForm" novalidate>
+      <div class="login-field">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" required autocomplete="username" placeholder="Ingresá tu usuario">
+      </div>
+      <div class="login-field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Ingresá tu contraseña">
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <button type="submit" class="login-btn" id="loginBtn">Iniciar Sesión</button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function() {
+  var ADMIN_USER = 'Reinacatalina';
+  var ADMIN_PASS = 'Reinacatalina2026';
+
+  var form = document.getElementById('loginForm');
+  var errorEl = document.getElementById('loginError');
+
+  if (sessionStorage.getItem('omee_admin') === 'true') {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var user = document.getElementById('username').value.trim();
+    var pass = document.getElementById('password').value;
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      sessionStorage.setItem('omee_admin', 'true');
+      window.location.href = 'dashboard.html';
+    } else {
+      errorEl.textContent = 'Usuario o contraseña incorrectos';
+      document.getElementById('password').value = '';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
