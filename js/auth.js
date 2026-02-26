@@ -55,4 +55,71 @@
         btn.textContent = 'Iniciar Sesión';
       });
   });
+
+  /* --- Recupero de contraseña --- */
+  var forgotLink = document.getElementById('forgotPasswordLink');
+  var forgotModal = document.getElementById('forgotModal');
+  var forgotClose = document.getElementById('forgotModalClose');
+  var forgotForm = document.getElementById('forgotForm');
+  var forgotStatus = document.getElementById('forgotStatus');
+
+  if (forgotLink && forgotModal) {
+    forgotLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      forgotModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      forgotStatus.textContent = '';
+      forgotStatus.className = 'forgot-status';
+      var emailField = document.getElementById('forgotEmail');
+      var loginEmail = document.getElementById('loginEmail').value.trim();
+      if (loginEmail) emailField.value = loginEmail;
+      emailField.focus();
+    });
+
+    forgotClose.addEventListener('click', closeForgotModal);
+    forgotModal.addEventListener('click', function(e) {
+      if (e.target === forgotModal) closeForgotModal();
+    });
+
+    function closeForgotModal() {
+      forgotModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    forgotForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var email = document.getElementById('forgotEmail').value.trim();
+      if (!email) {
+        forgotStatus.textContent = 'Ingresá tu email';
+        forgotStatus.className = 'forgot-status forgot-error';
+        return;
+      }
+
+      var forgotBtn = document.getElementById('forgotBtn');
+      forgotBtn.disabled = true;
+      forgotBtn.textContent = 'Enviando...';
+      forgotStatus.textContent = '';
+
+      auth.sendPasswordResetEmail(email)
+        .then(function() {
+          forgotStatus.textContent = '✅ ¡Listo! Revisá tu bandeja de entrada (y spam) para restablecer tu contraseña.';
+          forgotStatus.className = 'forgot-status forgot-success';
+          forgotBtn.textContent = 'Enviado';
+        })
+        .catch(function(err) {
+          var msg = 'No se pudo enviar el email. Verificá que sea correcto.';
+          if (err.code === 'auth/user-not-found') {
+            msg = 'No existe una cuenta con ese email.';
+          } else if (err.code === 'auth/invalid-email') {
+            msg = 'El email ingresado no es válido.';
+          } else if (err.code === 'auth/too-many-requests') {
+            msg = 'Demasiados intentos. Esperá unos minutos.';
+          }
+          forgotStatus.textContent = msg;
+          forgotStatus.className = 'forgot-status forgot-error';
+          forgotBtn.disabled = false;
+          forgotBtn.textContent = 'Enviar enlace';
+        });
+    });
+  }
 })();

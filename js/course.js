@@ -193,7 +193,7 @@
     if (ytMatch || vimeoMatch) {
       html += '<div class="video-modal-player"><iframe src="' + embedUrl + '" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>';
     } else {
-      html += '<div class="video-modal-player"><video controls autoplay src="' + url + '"></video></div>';
+      html += '<div class="video-modal-player"><video controls autoplay controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture oncontextmenu="return false;" src="' + url + '"></video></div>';
     }
 
     html += '</div>';

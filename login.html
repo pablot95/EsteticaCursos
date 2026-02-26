@@ -63,8 +63,29 @@
           <div class="login-error-msg" id="loginError"></div>
           <button type="submit" class="btn btn-primary login-submit-btn" id="loginBtn">Iniciar Sesión</button>
         </form>
+        <div class="login-forgot-link">
+          <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+        </div>
         <div class="login-footer-note">
           <p>¿No tenés cuenta? Al <a href="index.html#courses">inscribirte en un curso</a> se te creará automáticamente.</p>
+        </div>
+
+        <!-- Modal recupero de contraseña -->
+        <div class="forgot-modal-overlay" id="forgotModal">
+          <div class="forgot-modal">
+            <button class="forgot-modal-close" id="forgotModalClose">&times;</button>
+            <h2>Recuperar Contraseña</h2>
+            <p>Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
+            <form id="forgotForm" novalidate>
+              <div class="form-group">
+                <label for="forgotEmail">Email</label>
+                <input type="email" id="forgotEmail" required autocomplete="email" placeholder="tu@email.com">
+                <span class="error-msg"></span>
+              </div>
+              <div class="forgot-status" id="forgotStatus"></div>
+              <button type="submit" class="btn btn-primary login-submit-btn" id="forgotBtn">Enviar enlace</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
