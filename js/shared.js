@@ -9,10 +9,90 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
+var auth = firebase.auth();
 
 function formatPrice(num) {
   return '$' + num.toLocaleString('es-AR');
 }
+
+/* --- Auth helpers --- */
+var currentUser = null;
+var currentUserData = null;
+
+function generatePassword(len) {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  var pass = '';
+  for (var i = 0; i < (len || 8); i++) {
+    pass += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return pass;
+}
+
+function loadUserData(uid) {
+  return db.collection('users').doc(uid).get().then(function(doc) {
+    if (doc.exists) {
+      currentUserData = doc.data();
+      return currentUserData;
+    }
+    currentUserData = null;
+    return null;
+  });
+}
+
+function hasPurchasedCourse(courseId) {
+  if (!currentUserData || !currentUserData.purchasedCourses) return false;
+  return currentUserData.purchasedCourses.indexOf(courseId) !== -1;
+}
+
+function updateAuthNav() {
+  var navItems = document.querySelectorAll('.auth-nav-item');
+  navItems.forEach(function(el) { el.remove(); });
+
+  var nav = document.getElementById('mainNav');
+  if (!nav) return;
+
+  if (currentUser) {
+    var accountLink = document.createElement('a');
+    accountLink.href = (window.location.pathname.indexOf('/admin/') !== -1 ? '../' : '') + 'mi-cuenta.html';
+    accountLink.textContent = 'Mi Cuenta';
+    accountLink.className = 'auth-nav-item nav-cta';
+    nav.appendChild(accountLink);
+
+    var logoutLink = document.createElement('a');
+    logoutLink.href = '#';
+    logoutLink.textContent = 'Salir';
+    logoutLink.className = 'auth-nav-item';
+    logoutLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      auth.signOut().then(function() {
+        window.location.reload();
+      });
+    });
+    nav.insertBefore(logoutLink, accountLink);
+  } else {
+    var loginLink = document.createElement('a');
+    loginLink.href = (window.location.pathname.indexOf('/admin/') !== -1 ? '../' : '') + 'login.html';
+    loginLink.textContent = 'Iniciar Sesión';
+    loginLink.className = 'auth-nav-item nav-cta';
+    nav.appendChild(loginLink);
+  }
+}
+
+var authReadyPromise = new Promise(function(resolve) {
+  auth.onAuthStateChanged(function(user) {
+    currentUser = user;
+    if (user) {
+      loadUserData(user.uid).then(function() {
+        updateAuthNav();
+        resolve(user);
+      });
+    } else {
+      currentUserData = null;
+      updateAuthNav();
+      resolve(null);
+    }
+  });
+});
 
 async function fetchCourseData(courseId) {
   try {

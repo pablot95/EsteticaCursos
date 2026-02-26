@@ -30,6 +30,7 @@
   <div class="admin-tabs">
     <button class="admin-tab active" data-tab="courses">Cursos y Precios</button>
     <button class="admin-tab" data-tab="orders">Compras / Inscripciones</button>
+    <button class="admin-tab" data-tab="users">Usuarios / Alumnos</button>
   </div>
 
   <section class="admin-panel" id="panelCourses">
@@ -74,6 +75,28 @@
       </table>
     </div>
     <div class="admin-empty hidden" id="ordersEmpty">No hay inscripciones registradas aún.</div>
+  </section>
+
+  <section class="admin-panel hidden" id="panelUsers">
+    <div class="admin-panel-header">
+      <h2>Usuarios / Alumnos</h2>
+      <p>Alumnos registrados y sus cursos comprados.</p>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="usersTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Cursos Comprados</th>
+            <th>Fecha Registro</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+    <div class="admin-empty hidden" id="usersEmpty">No hay usuarios registrados aún.</div>
   </section>
 </main>
 
@@ -155,6 +178,13 @@
         <button type="button" class="admin-add-block-btn" id="addSyllabusBlock">+ Agregar Módulo</button>
       </div>
 
+      <div class="admin-form-group" style="border-top: 2px solid #E0E0E0; padding-top: 24px; margin-top: 8px;">
+        <label>Contenido Exclusivo (Módulos con Videos/PDFs)</label>
+        <p style="font-size: 0.82rem; color: #999; margin-bottom: 12px;">Estos módulos contienen el material que verán los alumnos que compraron el curso.</p>
+        <div id="modulesEditor"></div>
+        <button type="button" class="admin-add-block-btn" id="addModuleBlock">+ Agregar Módulo de Contenido</button>
+      </div>
+
       <div class="admin-form-actions">
         <button type="button" class="admin-btn-cancel" id="editCancel">Cancelar</button>
         <button type="submit" class="admin-btn-save" id="editSave">Guardar Cambios</button>
@@ -168,6 +198,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 <script src="../js/courses-data.js"></script>
 <script src="../admin/admin.js"></script>
 </body>

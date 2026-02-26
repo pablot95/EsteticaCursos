@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Cuenta | OMEE Reina Catalina</title>
+<meta name="description" content="Tu cuenta en OMEE Reina Catalina — accedé a tus cursos comprados.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="preloader" id="preloader"><div class="preloader-ring"></div></div>
+
+<header class="site-header inner-header" id="siteHeader">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="images/logo.jpeg" alt="Logo OMEE Reina Catalina" width="48" height="48">
+        <div class="logo-text">
+          OMEE Reina Catalina
+          <span>Universidad de Estética</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html#home">Inicio</a>
+        <a href="index.html#courses">Cursos</a>
+        <a href="index.html#about">Nosotros</a>
+        <a href="index.html#syllabus">Temarios</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="account-page">
+  <div class="container">
+    <div class="account-header reveal">
+      <h1>Mi Cuenta</h1>
+      <p class="account-email" id="accountEmail"></p>
+    </div>
+
+    <section class="account-section">
+      <h2 class="section-title">Mis Cursos</h2>
+      <p class="section-subtitle" id="noCourses" style="display:none;">Todavía no tenés cursos comprados. <a href="index.html#courses">Explorá nuestros cursos</a> para comenzar.</p>
+      <div class="account-courses-grid" id="accountCoursesGrid"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom" style="padding: 24px 0;">
+      <span class="footer-copyright">&copy; 2026 OMEE Reina Catalina. Todos los derechos reservados.</span>
+      <span class="footer-credit">Developed and designed by: <a href="https://gokywebs.net" target="_blank" rel="noopener">Gokywebs</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/courses-data.js"></script>
+<script src="js/mi-cuenta.js"></script>
+</body>
+</html>

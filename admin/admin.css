@@ -704,6 +704,125 @@ ul, ol { list-style: none; }
   color: #555;
 }
 
+/* Modules Editor */
+.module-edit-block {
+  background: #FFF8F0;
+  border: 1px solid #F0E0C8;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.module-items-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.module-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #E8E8E8;
+}
+
+.module-item-type {
+  padding: 6px 10px;
+  border: 2px solid #E0E0E0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  background: #FAFAFA;
+  min-width: 80px;
+  cursor: pointer;
+}
+
+.module-item-type:focus {
+  outline: none;
+  border-color: #C8A2C8;
+}
+
+.module-item-title {
+  flex: 1;
+  padding: 6px 10px;
+  border: 2px solid #E0E0E0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  background: #FAFAFA;
+  min-width: 0;
+}
+
+.module-item-title:focus {
+  outline: none;
+  border-color: #C8A2C8;
+}
+
+.module-item-url {
+  flex: 1.5;
+  padding: 6px 10px;
+  border: 2px solid #E0E0E0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  background: #FAFAFA;
+  min-width: 0;
+}
+
+.module-item-url:focus {
+  outline: none;
+  border-color: #C8A2C8;
+}
+
+.module-upload-label {
+  flex-shrink: 0;
+}
+
+.module-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #C5A55A;
+  color: #fff;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.module-upload-btn:hover {
+  background: #b8953d;
+}
+
+.admin-add-item-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px dashed #CCC;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.admin-add-item-btn:hover {
+  border-color: #C5A55A;
+  color: #C5A55A;
+}
+
 .admin-form-actions {
   display: flex;
   gap: 12px;
@@ -811,5 +930,27 @@ ul, ol { list-style: none; }
 
   .admin-form-actions {
     flex-direction: column;
+  }
+
+  .module-item-row {
+    flex-wrap: wrap;
+  }
+
+  .module-item-type {
+    width: 100%;
+  }
+
+  .module-item-title,
+  .module-item-url {
+    flex: 1 1 100%;
+  }
+
+  .module-upload-label {
+    flex: 1 1 100%;
+  }
+
+  .module-upload-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

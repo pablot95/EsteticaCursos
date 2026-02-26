@@ -38,19 +38,24 @@
   var tabs = document.querySelectorAll('.admin-tab');
   var coursesPanel = document.getElementById('panelCourses');
   var ordersPanel = document.getElementById('panelOrders');
+  var usersPanel = document.getElementById('panelUsers');
 
   tabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
       tabs.forEach(function(t) { t.classList.remove('active'); });
       tab.classList.add('active');
       var target = tab.getAttribute('data-tab');
+      coursesPanel.classList.add('hidden');
+      ordersPanel.classList.add('hidden');
+      usersPanel.classList.add('hidden');
       if (target === 'courses') {
         coursesPanel.classList.remove('hidden');
-        ordersPanel.classList.add('hidden');
-      } else {
-        coursesPanel.classList.add('hidden');
+      } else if (target === 'orders') {
         ordersPanel.classList.remove('hidden');
         loadOrders();
+      } else if (target === 'users') {
+        usersPanel.classList.remove('hidden');
+        loadUsers();
       }
     });
   });
@@ -158,6 +163,139 @@
     renderSyllabusEditor();
   });
 
+  /* --- Modules (Exclusive Content) Editor --- */
+  var moduleBlocks = [];
+
+  function renderModulesEditor() {
+    var container = document.getElementById('modulesEditor');
+    var html = '';
+    moduleBlocks.forEach(function(mod, idx) {
+      html += '<div class="module-edit-block" data-midx="' + idx + '">';
+      html += '<div class="syllabus-edit-header">';
+      html += '<span class="syllabus-block-num" style="background:#C5A55A;">' + (idx + 1) + '</span>';
+      html += '<input type="text" class="syllabus-block-title module-block-title" value="' + escapeAttr(mod.title) + '" placeholder="Título del módulo">';
+      html += '<button type="button" class="syllabus-remove-btn" onclick="removeModuleBlock(' + idx + ')" title="Eliminar módulo">\u00d7</button>';
+      html += '</div>';
+      html += '<div class="module-items-editor" id="moduleItems_' + idx + '">';
+      (mod.items || []).forEach(function(item, iIdx) {
+        html += renderModuleItemRow(idx, iIdx, item);
+      });
+      html += '</div>';
+      html += '<button type="button" class="admin-add-item-btn" onclick="addModuleItem(' + idx + ')">+ Agregar Video/PDF</button>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function renderModuleItemRow(modIdx, itemIdx, item) {
+    var html = '<div class="module-item-row" data-iidx="' + itemIdx + '">';
+    html += '<select class="module-item-type" onchange="updateModuleItemType(' + modIdx + ',' + itemIdx + ',this.value)">';
+    html += '<option value="video"' + (item.type === 'video' ? ' selected' : '') + '>Video</option>';
+    html += '<option value="pdf"' + (item.type === 'pdf' ? ' selected' : '') + '>PDF</option>';
+    html += '</select>';
+    html += '<input type="text" class="module-item-title" value="' + escapeAttr(item.title) + '" placeholder="Título del contenido">';
+    html += '<input type="url" class="module-item-url" value="' + escapeAttr(item.url) + '" placeholder="URL o subí un archivo →">';
+    html += '<label class="module-upload-label" title="Subir archivo">';
+    html += '<input type="file" class="module-upload-input" accept="video/*,.pdf,.mp4,.mov,.avi,.webm" onchange="handleModuleFileUpload(this,' + modIdx + ',' + itemIdx + ')" style="display:none;">';
+    html += '<span class="module-upload-btn">📁 Subir</span>';
+    html += '</label>';
+    html += '<button type="button" class="syllabus-remove-btn" onclick="removeModuleItem(' + modIdx + ',' + itemIdx + ')" title="Eliminar">×</button>';
+    html += '</div>';
+    return html;
+  }
+
+  window.handleModuleFileUpload = async function(input, modIdx, itemIdx) {
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var courseId = document.getElementById('editCourseId').value;
+
+    // Validate file size (max 500MB)
+    if (file.size > 500 * 1024 * 1024) {
+      showToast('El archivo es demasiado grande (máx 500MB)', 'error');
+      return;
+    }
+
+    var uploadBtn = input.parentElement.querySelector('.module-upload-btn');
+    var urlInput = input.closest('.module-item-row').querySelector('.module-item-url');
+    uploadBtn.textContent = '⏳ Subiendo...';
+    uploadBtn.style.pointerEvents = 'none';
+
+    try {
+      var ext = file.name.split('.').pop();
+      var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      var storagePath = 'modules/' + courseId + '/mod' + modIdx + '_item' + itemIdx + '_' + safeName;
+      var ref = storage.ref(storagePath);
+      var uploadTask = ref.put(file);
+
+      uploadTask.on('state_changed', function(snapshot) {
+        var pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        uploadBtn.textContent = '⏳ ' + pct + '%';
+      });
+
+      await uploadTask;
+      var downloadUrl = await ref.getDownloadURL();
+      urlInput.value = downloadUrl;
+      uploadBtn.textContent = '✅ Listo';
+      showToast('Archivo subido correctamente');
+    } catch (err) {
+      showToast('Error al subir: ' + err.message, 'error');
+      uploadBtn.textContent = '📁 Subir';
+    } finally {
+      uploadBtn.style.pointerEvents = '';
+    }
+  };
+
+  function collectModules() {
+    var blocks = [];
+    document.querySelectorAll('.module-edit-block').forEach(function(el) {
+      var title = el.querySelector('.module-block-title').value.trim();
+      var items = [];
+      el.querySelectorAll('.module-item-row').forEach(function(row) {
+        var type = row.querySelector('.module-item-type').value;
+        var itemTitle = row.querySelector('.module-item-title').value.trim();
+        var url = row.querySelector('.module-item-url').value.trim();
+        if (itemTitle || url) {
+          items.push({ type: type, title: itemTitle, url: url });
+        }
+      });
+      if (title || items.length > 0) {
+        blocks.push({ title: title, items: items });
+      }
+    });
+    return blocks;
+  }
+
+  window.removeModuleBlock = function(idx) {
+    moduleBlocks = collectModules();
+    moduleBlocks.splice(idx, 1);
+    renderModulesEditor();
+  };
+
+  window.addModuleItem = function(modIdx) {
+    moduleBlocks = collectModules();
+    if (!moduleBlocks[modIdx]) return;
+    moduleBlocks[modIdx].items.push({ type: 'video', title: '', url: '' });
+    renderModulesEditor();
+  };
+
+  window.removeModuleItem = function(modIdx, itemIdx) {
+    moduleBlocks = collectModules();
+    if (moduleBlocks[modIdx] && moduleBlocks[modIdx].items) {
+      moduleBlocks[modIdx].items.splice(itemIdx, 1);
+    }
+    renderModulesEditor();
+  };
+
+  window.updateModuleItemType = function() {
+    // Type updates in real-time via select, no action needed
+  };
+
+  document.getElementById('addModuleBlock').addEventListener('click', function() {
+    moduleBlocks = collectModules();
+    moduleBlocks.push({ title: '', items: [] });
+    renderModulesEditor();
+  });
+
   /* --- Image Upload --- */
   var newCourseImgFile = null;
   var newTemarioImgFile = null;
@@ -237,6 +375,17 @@
     });
     renderSyllabusEditor();
 
+    // Modules (Exclusive Content)
+    moduleBlocks = (c.modules || []).map(function(m) {
+      return {
+        title: m.title || '',
+        items: (m.items || []).map(function(it) {
+          return { type: it.type || 'video', title: it.title || '', url: it.url || '' };
+        })
+      };
+    });
+    renderModulesEditor();
+
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   };
@@ -268,7 +417,8 @@
         priceGroup: parseInt(document.getElementById('editPriceGroup').value) || 0,
         pricePersonal: parseInt(document.getElementById('editPricePersonal').value) || 0,
         includes: document.getElementById('editIncludes').value.split('\n').filter(function(l) { return l.trim() !== ''; }),
-        syllabus: collectSyllabus()
+        syllabus: collectSyllabus(),
+        modules: collectModules()
       };
 
       var spotsVal = document.getElementById('editSpots').value;
@@ -387,19 +537,115 @@
 
   window.updateOrderStatus = function(orderId, newStatus) {
     db.collection('orders').doc(orderId).update({ status: newStatus }).then(function() {
+      var order = null;
       allOrders.forEach(function(o) {
-        if (o._id === orderId) o.status = newStatus;
+        if (o._id === orderId) {
+          o.status = newStatus;
+          order = o;
+        }
       });
       renderOrders();
       var label = newStatus === 'paid' ? 'pagado' : 'cancelado';
       showToast('Estado actualizado a ' + label);
+
+      // If marked as paid, grant course access to the user
+      if (newStatus === 'paid' && order && order.courseId) {
+        grantCourseAccess(order);
+      }
     }).catch(function(err) {
       showToast('Error: ' + err.message, 'error');
     });
   };
 
+  function grantCourseAccess(order) {
+    var courseId = order.courseId;
+
+    if (order.userUid) {
+      // Direct UID reference: update user doc
+      db.collection('users').doc(order.userUid).update({
+        purchasedCourses: firebase.firestore.FieldValue.arrayUnion(courseId)
+      }).then(function() {
+        showToast('Acceso al curso otorgado al alumno');
+      }).catch(function(err) {
+        console.error('Error granting access by UID:', err);
+        // Fallback: try by email
+        if (order.email) grantCourseByEmail(order.email, courseId);
+      });
+    } else if (order.email) {
+      grantCourseByEmail(order.email, courseId);
+    }
+  }
+
+  function grantCourseByEmail(email, courseId) {
+    db.collection('users').where('email', '==', email).limit(1).get()
+      .then(function(snap) {
+        if (!snap.empty) {
+          var userDoc = snap.docs[0];
+          return userDoc.ref.update({
+            purchasedCourses: firebase.firestore.FieldValue.arrayUnion(courseId)
+          });
+        } else {
+          showToast('No se encontró usuario con email ' + email + '. El alumno debe registrarse primero.', 'error');
+        }
+      })
+      .then(function() {
+        showToast('Acceso al curso otorgado al alumno');
+      })
+      .catch(function(err) {
+        showToast('Error al otorgar acceso: ' + err.message, 'error');
+      });
+  }
+
   document.getElementById('orderFilter').addEventListener('change', renderOrders);
   document.getElementById('statusFilter').addEventListener('change', renderOrders);
+
+  /* --- Users --- */
+  function loadUsers() {
+    db.collection('users').orderBy('createdAt', 'desc').get().then(function(snapshot) {
+      var users = [];
+      snapshot.forEach(function(doc) {
+        var data = doc.data();
+        data._id = doc.id;
+        users.push(data);
+      });
+      renderUsers(users);
+    }).catch(function(err) {
+      var emptyEl = document.getElementById('usersEmpty');
+      emptyEl.textContent = 'Error al cargar usuarios: ' + err.message;
+      emptyEl.classList.remove('hidden');
+    });
+  }
+
+  function renderUsers(users) {
+    var tbody = document.getElementById('usersBody');
+    var emptyEl = document.getElementById('usersEmpty');
+
+    if (users.length === 0) {
+      tbody.innerHTML = '';
+      emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    emptyEl.classList.add('hidden');
+    var html = '';
+
+    users.forEach(function(u) {
+      var date = u.createdAt && u.createdAt.toDate ? u.createdAt.toDate().toLocaleDateString('es-AR') : '\u2014';
+      var courses = (u.purchasedCourses || []).map(function(cid) {
+        return COURSES[cid] ? COURSES[cid].name : cid;
+      }).join(', ') || 'Ninguno';
+
+      html += '<tr>';
+      html += '<td>' + (u.firstName || '') + ' ' + (u.lastName || '') + '</td>';
+      html += '<td>' + (u.email || '') + '</td>';
+      html += '<td>' + (u.phone || '') + '</td>';
+      html += '<td>' + courses + '</td>';
+      html += '<td>' + date + '</td>';
+      html += '</tr>';
+    });
+
+    tbody.innerHTML = html;
+  }
 
   loadCourses();
 })();
