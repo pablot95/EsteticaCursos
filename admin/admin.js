@@ -348,6 +348,7 @@
     document.getElementById('editDuration').value = c.duration || '';
     document.getElementById('editCertificate').value = c.certificate || '';
     document.getElementById('editShortDesc').value = c.shortDesc || '';
+    document.getElementById('editFormato').value = c.formato || 'Online en Vivo';
     document.getElementById('editPriceGroup').value = c.priceGroup || 0;
     document.getElementById('editPricePersonal').value = c.pricePersonal || 0;
     document.getElementById('editSpots').value = typeof c.spots === 'number' ? c.spots : '';
@@ -413,6 +414,7 @@
         tagline: document.getElementById('editTagline').value.trim(),
         duration: document.getElementById('editDuration').value.trim(),
         certificate: document.getElementById('editCertificate').value.trim(),
+        formato: document.getElementById('editFormato').value.trim() || 'Online en Vivo',
         shortDesc: document.getElementById('editShortDesc').value.trim(),
         priceGroup: parseInt(document.getElementById('editPriceGroup').value) || 0,
         pricePersonal: parseInt(document.getElementById('editPricePersonal').value) || 0,

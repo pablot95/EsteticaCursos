@@ -1326,6 +1326,7 @@ p {
 
 .syllabus-section {
   background: var(--lilac-pale);
+  padding: 20px 0;
 }
 
 .syllabus-grid {
@@ -2565,5 +2566,8 @@ p {
 
   .credentials-actions {
     flex-direction: column;
+  }
+  .syllabus-section {
+    padding: 6px 0;
   }
 }
