@@ -288,8 +288,14 @@ ul, ol { list-style: none; }
 .admin-detail span { color: #777; }
 .admin-detail strong { color: #A68B3E; }
 
-.admin-edit-btn {
+.admin-course-actions {
+  display: flex;
+  gap: 8px;
   margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.admin-edit-btn {
   padding: 8px 18px;
   background: #1A1A1A;
   color: #FFF;
@@ -301,6 +307,30 @@ ul, ol { list-style: none; }
 }
 
 .admin-edit-btn:hover { background: #C5A55A; }
+
+.admin-modules-btn {
+  padding: 8px 18px;
+  background: transparent;
+  color: #C5A55A;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 2px solid #C5A55A;
+  transition: all 0.3s;
+  align-self: flex-start;
+}
+
+.admin-modules-btn:hover {
+  background: #C5A55A;
+  color: #FFF;
+}
+
+.modules-modal-desc {
+  font-size: 0.88rem;
+  color: #777;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
 
 .admin-orders-filters {
   display: flex;

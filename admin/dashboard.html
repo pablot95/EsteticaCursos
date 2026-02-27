@@ -182,18 +182,31 @@
         <button type="button" class="admin-add-block-btn" id="addSyllabusBlock">+ Agregar Módulo</button>
       </div>
 
-      <div class="admin-form-group" style="border-top: 2px solid #E0E0E0; padding-top: 24px; margin-top: 8px;">
-        <label>Contenido Exclusivo (Módulos con Videos/PDFs)</label>
-        <p style="font-size: 0.82rem; color: #999; margin-bottom: 12px;">Estos módulos contienen el material que verán los alumnos que compraron el curso.</p>
-        <div id="modulesEditor"></div>
-        <button type="button" class="admin-add-block-btn" id="addModuleBlock">+ Agregar Módulo de Contenido</button>
-      </div>
-
       <div class="admin-form-actions">
         <button type="button" class="admin-btn-cancel" id="editCancel">Cancelar</button>
         <button type="submit" class="admin-btn-save" id="editSave">Guardar Cambios</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="admin-modal hidden" id="modulesModal">
+  <div class="admin-modal-overlay" id="modulesModalOverlay"></div>
+  <div class="admin-modal-content admin-modal-wide">
+    <div class="admin-modal-header">
+      <h3 id="modulesModalTitle">Módulos de Contenido</h3>
+      <button class="admin-modal-close" id="modulesModalClose">&times;</button>
+    </div>
+    <div class="modules-modal-body">
+      <p class="modules-modal-desc">Gestioná los módulos con videos y PDFs que verán los alumnos que compraron este curso.</p>
+      <input type="hidden" id="modulesCourseId">
+      <div id="modulesEditor"></div>
+      <button type="button" class="admin-add-block-btn" id="addModuleBlock">+ Agregar Módulo de Contenido</button>
+      <div class="admin-form-actions">
+        <button type="button" class="admin-btn-cancel" id="modulesCancel">Cancelar</button>
+        <button type="button" class="admin-btn-save" id="modulesSave">Guardar Módulos</button>
+      </div>
+    </div>
   </div>
 </div>
 

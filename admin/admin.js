@@ -104,7 +104,10 @@
       html += '<div class="admin-detail"><span>Personalizado</span><strong>' + formatPrice(c.pricePersonal) + '</strong></div>';
       html += '<div class="admin-detail"><span>Cupos</span><strong>' + spots + '</strong></div>';
       html += '</div>';
-      html += '<button class="admin-edit-btn" onclick="openEdit(\'' + id + '\')">Editar Curso</button>';
+      html += '<div class="admin-course-actions">';
+      html += '<button class="admin-edit-btn" onclick="openEdit(\'' + id + '\')">✏️ Editar Curso</button>';
+      html += '<button class="admin-modules-btn" onclick="openModules(\'' + id + '\')">📚 Agregar Módulos</button>';
+      html += '</div>';
       html += '</div></div>';
     });
 
@@ -207,7 +210,7 @@
   window.handleModuleFileUpload = async function(input, modIdx, itemIdx) {
     if (!input.files || !input.files[0]) return;
     var file = input.files[0];
-    var courseId = document.getElementById('editCourseId').value;
+    var courseId = document.getElementById('modulesCourseId').value;
 
     // Validate file size (max 500MB)
     if (file.size > 500 * 1024 * 1024) {
@@ -376,17 +379,6 @@
     });
     renderSyllabusEditor();
 
-    // Modules (Exclusive Content)
-    moduleBlocks = (c.modules || []).map(function(m) {
-      return {
-        title: m.title || '',
-        items: (m.items || []).map(function(it) {
-          return { type: it.type || 'video', title: it.title || '', url: it.url || '' };
-        })
-      };
-    });
-    renderModulesEditor();
-
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   };
@@ -399,6 +391,56 @@
   document.getElementById('editModalClose').addEventListener('click', closeEditModal);
   document.getElementById('editCancel').addEventListener('click', closeEditModal);
   document.getElementById('editModalOverlay').addEventListener('click', closeEditModal);
+
+  /* --- Open Modules Modal --- */
+  window.openModules = function(courseId) {
+    var c = getMerged(courseId);
+    document.getElementById('modulesCourseId').value = courseId;
+    document.getElementById('modulesModalTitle').textContent = 'Módulos: ' + c.name;
+
+    moduleBlocks = (c.modules || []).map(function(m) {
+      return {
+        title: m.title || '',
+        items: (m.items || []).map(function(it) {
+          return { type: it.type || 'video', title: it.title || '', url: it.url || '' };
+        })
+      };
+    });
+    renderModulesEditor();
+
+    document.getElementById('modulesModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeModulesModal() {
+    document.getElementById('modulesModal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modulesModalClose').addEventListener('click', closeModulesModal);
+  document.getElementById('modulesCancel').addEventListener('click', closeModulesModal);
+  document.getElementById('modulesModalOverlay').addEventListener('click', closeModulesModal);
+
+  /* --- Save Modules --- */
+  document.getElementById('modulesSave').addEventListener('click', async function() {
+    var courseId = document.getElementById('modulesCourseId').value;
+    var saveBtn = document.getElementById('modulesSave');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Guardando...';
+
+    try {
+      var modulesData = collectModules();
+      await db.collection('courses').doc(courseId).set({ modules: modulesData }, { merge: true });
+      firebaseData[courseId] = Object.assign(firebaseData[courseId] || {}, { modules: modulesData });
+      closeModulesModal();
+      showToast('Módulos guardados correctamente');
+    } catch (err) {
+      showToast('Error al guardar módulos: ' + err.message, 'error');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Guardar Módulos';
+    }
+  });
 
   /* --- Save Course --- */
   document.getElementById('editForm').addEventListener('submit', async function(e) {
@@ -420,7 +462,6 @@
         pricePersonal: parseInt(document.getElementById('editPricePersonal').value) || 0,
         includes: document.getElementById('editIncludes').value.split('\n').filter(function(l) { return l.trim() !== ''; }),
         syllabus: collectSyllabus(),
-        modules: collectModules()
       };
 
       var spotsVal = document.getElementById('editSpots').value;
