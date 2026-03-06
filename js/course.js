@@ -12,7 +12,7 @@
     var m = Object.assign({}, c, fbData || {});
     mergedCourse = m;
 
-    document.title = m.name + ' | OMEE Reina Catalina';
+    document.title = m.name + ' | Reina Catalina';
     var metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', m.shortDesc);
 

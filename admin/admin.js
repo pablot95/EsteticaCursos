@@ -566,9 +566,6 @@
       html += '<td>' + planLabel + '</td>';
       html += '<td><span class="order-status ' + statusClass + '">' + statusLabel + '</span></td>';
       html += '<td>';
-      if (o.status !== 'paid') {
-        html += '<button class="admin-action-btn paid" onclick="updateOrderStatus(\'' + o._id + '\',\'paid\')">Marcar Pagado</button>';
-      }
       if (o.status !== 'cancelled') {
         html += '<button class="admin-action-btn cancel" onclick="updateOrderStatus(\'' + o._id + '\',\'cancelled\')">Cancelar</button>';
       }
